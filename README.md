@@ -5,7 +5,7 @@ A simple raw file processor
 - The metadata of each file will be sent with graphql format
 
 ## route
-- GET `file/list` : to send list to FE
+- GET `blobs/list` : to send blob list to FE (query params may be needed for the pagination)
 
 ## folder structure
 
