@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { BlobServiceClient, ContainerClient } from '@azure/storage-blob';
+import { Builder } from '@nestjs/cli/lib/configuration';
 
 @Injectable()
 export class AzureBlobService {
@@ -33,5 +34,30 @@ export class AzureBlobService {
 
     this.logger.log(`Blobs listed successfully.`);
     return blobNames;
+  }
+
+  async downloadBlob(fileName: string): Promise<Buffer> {
+    const blockBlobClient = this.containerClient.getBlockBlobClient(fileName);
+    const downloadBockBlobResponse = await blockBlobClient.download(0);
+    const downloaded = await this.streamToBuffer(
+      downloadBockBlobResponse.readableStreamBody,
+    );
+    this.logger.log(`Blob ${fileName} downloaded successfully.`);
+    return downloaded;
+  }
+
+  private async streamToBuffer(
+    readableStream: NodeJS.ReadableStream,
+  ): Promise<Buffer> {
+    return new Promise((resolve, reject) => {
+      const chunks: Buffer[] = [];
+      readableStream.on('data', (data) => {
+        chunks.push(data instanceof Buffer ? data : Buffer.from(data));
+      });
+      readableStream.on('end', () => {
+        resolve(Buffer.concat(chunks));
+      });
+      readableStream.on('error', reject);
+    });
   }
 }
