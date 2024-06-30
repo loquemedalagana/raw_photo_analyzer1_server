@@ -7,8 +7,7 @@ export class AzureBlobController {
   constructor(private readonly azureBlobService: AzureBlobService) {}
   @Get('list')
   async listFiles() {
-    const blobNames = await this.azureBlobService.listBlobs();
-    return { blobNames };
+    return await this.azureBlobService.listBlobs();
   }
 
   @Get('download/:fileName')
