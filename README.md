@@ -1,9 +1,3 @@
-## Description
-A simple raw file processor
-- to get list of raw files
-- analyze raw file info
-- The metadata of each file will be sent with graphql format
-
 ## route
 - GET `blobs/list` : to send blob list to FE (query params may be needed for the pagination)
 - GET `blobs/download/:fileName` : to get file buffer
