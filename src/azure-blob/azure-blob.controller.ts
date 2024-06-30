@@ -20,4 +20,18 @@ export class AzureBlobController {
     res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
     res.send(fileBuffer);
   }
+
+  @Get('metadata/:fileName')
+  async readFileMetadata(
+    @Param('fileName') fileName: string,
+    @Res() res: Response,
+  ) {
+    const rawImageMetaData =
+      await this.azureBlobService.readFileMetadata(fileName);
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=${fileName}, width: ${rawImageMetaData.width}, height: ${rawImageMetaData.height}`,
+    );
+    res.send(rawImageMetaData);
+  }
 }
